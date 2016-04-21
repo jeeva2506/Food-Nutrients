@@ -1,0 +1,124 @@
+<html ng-app="foodApp">
+
+	  <head>
+
+	    <meta charset="utf-8">
+
+	    <title>Food Database</title>
+
+	    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+
+	    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
+
+	    <script>
+
+	      var foodApp = angular.module('foodApp', []);
+		
+		
+	      foodApp.controller('foodCtrl',['$scope','$http', function ($scope,$http)
+		{
+		
+		$scope.submit=function()
+			{
+		var ndb=$scope.number;
+		
+		var url= "http://api.nal.usda.gov/ndb/reports/?ndbno="+ndb+"&type=b&format=json&api_key=RagHkdKRDmdFTVqN40vVfbMdVS4anHxfPVGuEtjQ" ;
+
+	        $http.get(url).success(function(data) {
+
+	          $scope.food= data;
+		
+
+	        });
+
+	      }
+		}]);
+
+	    </script>
+
+	  </head>
+
+	  <body ng-controller="foodCtrl">
+	   <center>
+ <h1>
+Food Database
+</h1>
+<p>
+Select  the Food Item to get Report: <select ng-model="number" >
+<option value="28256" > Austin </option>
+<option  value="01001">Butter, Salted</option>
+<option value="01009">Cheese, Chedder</option>
+<option value="01238"> Icecream Sandwitch</option>
+<option value="01179"> SourCream,light</option>
+<option value="04002"> Lard</option>
+<option value="04588"> Oil,Oat</option>
+<option value="05305"> Ground turkey,Raw</option>
+<option value="06150">Sauce,Barbecue</option>
+<option value="09089"> Figs,raw</option>
+</select>
+</p>
+<input type="button" ng-click="submit()" value ="Get Report">
+<br>
+<br>
+	    
+	    <table border="1">
+
+	      <tr>
+
+	        <th>SR</th>
+
+	        <th>NDB FOOD NUMBER</th>
+
+	        <th>FOOD NAME</th>
+
+	      </tr>
+
+	      <tr >
+
+	        <td>{{food.report.sr}}</td>
+
+	        <td>{{food.report.food.ndbno}}</td>
+
+	        <td>{{food.report.food.name}}</td>
+
+	      </tr>
+		
+
+	    </table>
+<br>
+<br>
+	<table border ="1">
+	<tr>
+	<th>Nutrient_ID</th>
+	<th>NAME</th>
+	<th> Group</th>
+	<th> Unit</th>
+	<th> Nutrient_Value</th>
+	<th> Measures_Label</th>
+	<th>Measures_Eqv</th>
+	<th>Measures_Quantity</th>
+	<th>Measures_Value</th>
+	
+	</tr>
+<tr ng-repeat=" x in food.report.food.nutrients">
+<td> {{ x.nutrient_id}}</td>
+<td>{{ x.name}}</td>
+<td> {{ x.group}}</td>
+<td> {{ x.unit}}</td>
+<td> {{ x.value}}</td>
+<td> {{ x.measures[0].label}}</td>
+<td> {{ x.measures[0].eqv}}</td>
+<td> {{ x.measures[0].qty}}</td>
+<td> {{ x.measures[0].value}}</td>
+
+</tr>
+</table>
+
+
+	
+
+
+
+	  </body>
+
+	</html>
